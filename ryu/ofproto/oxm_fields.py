@@ -118,6 +118,9 @@ class ONFExperimenter(_Experimenter):
     experimenter_id = ofproto_common.ONF_EXPERIMENTER_ID
 
 
+class NoviExperimenter(_Experimenter):
+    experimenter_id = ofproto_common.NOVI_EXPERIMENTER_ID
+
 class OldONFExperimenter(_Experimenter):
     # This class is for the old version of EXT-256
     experimenter_id = ofproto_common.ONF_EXPERIMENTER_ID

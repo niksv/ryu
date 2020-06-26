@@ -22,7 +22,6 @@ from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
 from ryu.lib.packet import ether_types
 
-
 class SimpleSwitch13(app_manager.RyuApp):
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
 
@@ -44,8 +43,14 @@ class SimpleSwitch13(app_manager.RyuApp):
         # truncated packet data. In that case, we cannot output packets
         # correctly.  The bug has been fixed in OVS v2.1.0.
         match = parser.OFPMatch()
-        actions = [parser.OFPActionOutput(ofproto.OFPP_CONTROLLER,
-                                          ofproto.OFPCML_NO_BUFFER)]
+        push_vxlan = parser.NoviActionPushVxlan('00:00:00:00:00:01', '00:00:00:00:00:02', '192.168.0.1', '192.168.0.2',
+                                                3000, 4000)
+        hash = parser.NoviActionHashFieldsSym([ofproto.OXM_OF_IPV4_SRC])
+
+        actions = [hash]
+        # actions = [push_vxlan, hash]
+        # actions = [push_vxlan]
+
         self.add_flow(datapath, 0, match, actions)
 
     def add_flow(self, datapath, priority, match, actions, buffer_id=None):
@@ -65,6 +70,8 @@ class SimpleSwitch13(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
+        if True:
+            return
         # If you hit this you might want to increase
         # the "miss_send_length" of your switch
         if ev.msg.msg_len < ev.msg.total_len:

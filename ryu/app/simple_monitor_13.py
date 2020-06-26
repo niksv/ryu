@@ -69,10 +69,8 @@ class SimpleMonitor13(simple_switch_13.SimpleSwitch13):
         self.logger.info('---------------- '
                          '-------- ----------------- '
                          '-------- -------- --------')
-        for stat in sorted([flow for flow in body if flow.priority == 1],
-                           key=lambda flow: (flow.match['in_port'],
-                                             flow.match['eth_dst'])):
-            self.logger.info('%016x %8x %17s %8x %8d %8d',
+        for stat in body:
+            self.logger.info('%016x %8x %8d %8d',
                              ev.msg.datapath.id,
                              stat.match['in_port'], stat.match['eth_dst'],
                              stat.instructions[0].actions[0].port,

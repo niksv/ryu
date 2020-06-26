@@ -54,6 +54,7 @@ from ryu import utils
 from ryu.ofproto.ofproto_parser import StringifyMixin, MsgBase
 from ryu.ofproto import ether
 from ryu.ofproto import nx_actions
+from ryu.ofproto import novi_actions
 from ryu.ofproto import ofproto_parser
 from ryu.ofproto import ofproto_common
 from ryu.ofproto import ofproto_v1_3 as ofproto
@@ -3552,6 +3553,8 @@ class OFPActionExperimenter(OFPAction):
                     ): offset + len_]
         if experimenter == ofproto_common.NX_EXPERIMENTER_ID:
             obj = NXAction.parse(data)  # noqa
+        elif experimenter == ofproto_common.NOVI_EXPERIMENTER_ID:
+            obj = NoviAction.parse(data)  # noqa
         else:
             obj = OFPActionExperimenterUnknown(experimenter, data)
         obj.len = len_
@@ -6493,6 +6496,10 @@ class ONFBundleAddMsg(OFPExperimenter):
 
 
 nx_actions.generate(
+    'ryu.ofproto.ofproto_v1_3',
+    'ryu.ofproto.ofproto_v1_3_parser'
+)
+novi_actions.generate(
     'ryu.ofproto.ofproto_v1_3',
     'ryu.ofproto.ofproto_v1_3_parser'
 )
